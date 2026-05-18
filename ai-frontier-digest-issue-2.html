@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Frontier Digest — Issue #2 · May 18, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --tmo: #1A4FC8;
+  --tmo-dark: #1240A8;
+  --tmo-light: #EBF1FC;
+  --tmo-border: #A5C0F0;
+  --tmo-on-dark: #7FA8E8;
+  --action: #C4581A;
+  --action-light: #FDF1E8;
+  --action-border: #EDAE86;
+  --warn: #9A6A00;
+  --warn-light: #FEF8E4;
+  --warn-border: #E5CC7A;
+  --ink: #0e0e0c;
+  --ink-2: #3a3a36;
+  --ink-3: #7a7a74;
+  --ink-4: #b8b5ac;
+  --paper: #f6f4ef;
+  --surface: #eeece6;
+  --surface-2: #e4e2db;
+  --border: #d8d5cd;
+  --green: #1a6644;
+  --red: #a02020;
+  --blue: #1a4a8c;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  padding: 0 0 80px;
+}
+
+/* ── STICKY NAV ── */
+.sticky-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 24px; height: 44px;
+  background: rgba(246,244,239,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  transition: transform 0.22s ease;
+}
+.sticky-nav.visible { transform: translateY(0); }
+.sticky-issue { font-family: var(--mono); font-size: 11px; color: var(--ink); font-weight: 500; white-space: nowrap; }
+.sticky-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.sticky-sections { display: flex; gap: 2px; overflow-x: auto; flex: 1; }
+.sticky-sections::-webkit-scrollbar { display: none; }
+.ssec {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  text-decoration: none; padding: 4px 8px; border-radius: 3px;
+  white-space: nowrap; transition: background 0.12s, color 0.12s;
+}
+.ssec:hover { background: var(--surface); color: var(--ink); }
+.ssec.actions { color: var(--action); }
+.sticky-lens {
+  font-family: var(--mono); font-size: 10px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent; cursor: pointer;
+  color: var(--ink-3); transition: all 0.15s;
+  white-space: nowrap;
+}
+.sticky-lens.active { background: var(--tmo-light); border-color: var(--tmo-border); color: var(--tmo); }
+.sl-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.15s; }
+.sticky-lens.active .sl-dot { background: var(--tmo); }
+
+/* ── MASTHEAD ── */
+.masthead {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.masthead-left { display: flex; flex-direction: column; gap: 4px; }
+.back-link {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: color 0.12s;
+}
+.back-link:hover { color: var(--ink); }
+.issue-serif { font-family: var(--serif); font-size: 28px; line-height: 1.1; color: var(--ink); }
+.masthead-right { text-align: right; display: flex; flex-direction: column; gap: 3px; }
+.masthead-date { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+.masthead-tag { font-family: var(--mono); font-size: 10px; color: var(--ink-4); }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.btn-group { display: flex; gap: 4px; }
+.tbtn {
+  font-family: var(--mono); font-size: 10px;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--paper); cursor: pointer;
+  color: var(--ink-3); transition: all 0.12s;
+}
+.tbtn:hover { background: var(--surface-2); color: var(--ink); }
+.lens-btn {
+  font-family: var(--mono); font-size: 10px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--paper); cursor: pointer;
+  color: var(--ink-3); transition: all 0.15s; margin-left: auto;
+}
+.lens-btn.active { background: var(--tmo-light); border-color: var(--tmo-border); color: var(--tmo); }
+.lens-indicator { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.15s; }
+.lens-btn.active .lens-indicator { background: var(--tmo); }
+
+/* ── THREAD STRIP ── */
+.thread-strip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+}
+.ts-label { font-family: var(--mono); font-size: 10px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.ts-count { font-family: var(--mono); font-size: 10px; color: var(--ink-4); white-space: nowrap; }
+.t-chip {
+  font-family: var(--mono); font-size: 10px;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 12px;
+  border: 1px solid var(--border);
+  text-decoration: none; color: var(--ink-2);
+  transition: background 0.12s;
+}
+.t-chip:hover { background: var(--surface); }
+.cdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.t-chip.escalating .cdot { background: var(--red); }
+.t-chip.active .cdot { background: var(--green); }
+.t-chip.resolved .cdot { background: var(--blue); opacity: 0.65; }
+
+/* ── SHIPPED STRIP ── */
+.shipped-strip {
+  margin: 20px 32px 0;
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden;
+}
+.shipped-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.shipped-label { font-family: var(--mono); font-size: 10px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+.shipped-note { font-family: var(--mono); font-size: 10px; color: var(--ink-4); }
+.shipped-row {
+  display: grid; grid-template-columns: 148px 1fr auto;
+  align-items: baseline; gap: 12px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+.shipped-row:first-of-type { border-top: none; }
+.s-co { font-family: var(--mono); font-size: 10px; color: var(--ink-3); line-height: 1.5; }
+.s-desc { color: var(--ink-2); line-height: 1.5; }
+.s-meta { display: flex; align-items: center; gap: 8px; }
+.s-date { font-family: var(--mono); font-size: 9px; color: var(--ink-4); white-space: nowrap; }
+.s-tmo { display: none; width: 7px; height: 7px; border-radius: 50%; background: var(--tmo); }
+body.lens-on .s-tmo { display: block; }
+
+/* ── SINCE BOX ── */
+.since-box {
+  margin: 16px 32px 0;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--tmo);
+  border-radius: 6px;
+  background: var(--paper);
+}
+.box-label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.delta-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.delta-list li { font-size: 12.5px; color: var(--ink-2); line-height: 1.6; }
+.delta-list li strong { color: var(--ink); font-weight: 600; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+}
+.filter-label { font-family: var(--mono); font-size: 10px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.06em; }
+.filter-btn {
+  font-family: var(--mono); font-size: 10px;
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--paper); cursor: pointer;
+  color: var(--ink-3); transition: all 0.12s;
+}
+.filter-btn:hover, .filter-btn.f-active { background: var(--surface); color: var(--ink); border-color: var(--ink-4); }
+.fdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── SECTION LABEL ── */
+.section-label { font-family: var(--mono); font-size: 10px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.08em; padding: 0 32px; margin-bottom: 12px; }
+
+/* ── SECTIONS ── */
+.sections { padding: 0 32px; display: flex; flex-direction: column; gap: 10px; }
+.section { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; cursor: pointer;
+  background: var(--surface);
+  user-select: none;
+  transition: background 0.12s;
+}
+.section-header:hover { background: var(--surface-2); }
+.section-num { font-family: var(--mono); font-size: 18px; color: var(--ink-4); font-weight: 400; line-height: 1; min-width: 28px; }
+.section-title { font-family: var(--serif); font-size: 16px; color: var(--ink); flex: 1; }
+.section-badge { font-family: var(--mono); font-size: 9px; color: var(--ink-4); padding: 2px 8px; border: 1px solid var(--border); border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.chevron { font-size: 11px; color: var(--ink-4); transition: transform 0.18s; margin-left: 4px; }
+.section.open .chevron { transform: rotate(0deg); }
+.section:not(.open) .chevron { transform: rotate(-90deg); }
+
+.section-body { display: none; padding: 0 16px 16px; }
+.section.open .section-body { display: block; }
+.section-intro { font-size: 12.5px; color: var(--ink-3); font-style: italic; padding: 14px 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 12px; line-height: 1.7; }
+
+/* ── ITEMS ── */
+.item {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.item:first-of-type { border-top: none; padding-top: 4px; }
+.item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.item-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.item-body { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+
+.status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 9px;
+  padding: 2px 7px; border-radius: 10px;
+  text-transform: lowercase; letter-spacing: 0.03em;
+}
+.s-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.s-red { background: #fce8e8; color: var(--red); }
+.s-red .s-dot { background: var(--red); }
+.s-yellow { background: #fef8e4; color: var(--warn); }
+.s-yellow .s-dot { background: #c89200; }
+.s-green { background: #e8f4ee; color: var(--green); }
+.s-green .s-dot { background: var(--green); }
+.s-blue { background: #e8eef8; color: var(--blue); }
+.s-blue .s-dot { background: var(--blue); }
+.s-gray { background: var(--surface); color: var(--ink-3); }
+.s-gray .s-dot { background: var(--ink-4); }
+
+.relevance {
+  font-family: var(--mono); font-size: 9px;
+  padding: 2px 8px; border-radius: 10px;
+  background: var(--tmo-light); color: var(--tmo); border: 1px solid var(--tmo-border);
+  letter-spacing: 0.03em;
+}
+
+/* ── TMO ANNOTATION ── */
+.tmo-annotation { display: none; }
+body.lens-on .tmo-annotation {
+  display: block;
+  margin-top: 9px;
+  padding: 9px 12px;
+  background: var(--tmo-light);
+  border-left: 3px solid var(--tmo);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.annot-label {
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  color: var(--tmo); margin-right: 4px; letter-spacing: 0.04em;
+}
+
+.verify {
+  display: inline;
+  font-family: var(--mono); font-size: 10px;
+  padding: 1px 5px; border-radius: 3px;
+  background: var(--warn-light); color: var(--warn);
+  border: 1px solid var(--warn-border);
+}
+
+h3.sub {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin: 16px 0 8px;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+h3.sub:first-of-type { border-top: none; }
+
+/* ── THREAD TRACKER ── */
+.thread-tracker { padding: 0 32px; margin-top: 8px; }
+.tracker-label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.thread-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .thread-grid { grid-template-columns: 1fr; } }
+.thread-card { border-radius: 6px; padding: 14px; border: 1px solid var(--border); border-left-width: 3px; }
+.thread-card.escalating { border-left-color: var(--red); }
+.thread-card.active { border-left-color: var(--green); }
+.thread-card.resolved { border-left-color: var(--blue); opacity: 0.72; }
+.thread-issue { font-family: var(--mono); font-size: 9px; color: var(--ink-4); margin-bottom: 5px; }
+.thread-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 7px; }
+.thread-body { font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+
+/* ── TMO GRANOLA BOX ── */
+.tmo-box {
+  margin: 24px 32px 0;
+  background: var(--ink); border-radius: 8px;
+  padding: 20px 24px;
+}
+.tmo-box .box-label { color: var(--tmo-on-dark); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+.tmo-item { border-top: 1px solid rgba(255,255,255,0.08); padding: 14px 0; }
+.tmo-item:first-of-type { border-top: none; padding-top: 0; }
+.tmo-source { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 5px; }
+.tmo-text { font-size: 13px; color: rgba(255,255,255,0.82); line-height: 1.65; }
+.tmo-status { font-family: var(--mono); font-size: 9px; margin-top: 8px; }
+.ts-high { color: #e87878; }
+.ts-active { color: #7dcca0; }
+.ts-watch { color: #7fa8e8; }
+
+/* ── ACTIONS BOX ── */
+.actions-box {
+  margin: 24px 32px 0;
+  background: var(--action-light); border: 1px solid var(--action-border);
+  border-radius: 8px; padding: 20px 24px;
+}
+.actions-box .box-label { font-family: var(--mono); font-size: 10px; color: var(--action); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+.action-item { display: flex; gap: 16px; padding: 12px 0; border-top: 1px solid var(--action-border); }
+.action-item:first-of-type { border-top: none; padding-top: 0; }
+.action-num { font-family: var(--mono); font-size: 18px; color: var(--action-border); flex-shrink: 0; line-height: 1.2; }
+.action-text { font-size: 13px; color: var(--ink-2); line-height: 1.65; }
+.action-text strong { color: var(--ink); }
+
+/* ── WATCHING NEXT ── */
+.watching-section { padding: 0 32px; margin-top: 24px; }
+.watching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+@media (max-width: 640px) { .watching-grid { grid-template-columns: 1fr; } }
+.watch-card { border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+.watch-num { font-family: var(--mono); font-size: 9px; color: var(--ink-4); margin-bottom: 5px; }
+.watch-trigger { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 7px; }
+.watch-if { font-size: 12px; color: var(--ink-3); line-height: 1.65; }
+.watch-if em { color: var(--green); font-style: normal; font-weight: 500; }
+.watch-if span { color: var(--red); }
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 40px; padding: 16px 32px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.footer-left { font-family: var(--mono); font-size: 10px; color: var(--ink-4); }
+.footer-right { font-family: var(--mono); font-size: 10px; color: var(--ink-4); }
+
+/* ── STICKY ACTIONS BTN ── */
+.sticky-action {
+  position: fixed; bottom: 20px; right: 20px; z-index: 100;
+  font-family: var(--mono); font-size: 10px;
+  padding: 8px 14px; border-radius: 6px;
+  background: var(--action); color: #fff;
+  border: none; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(196,88,26,0.3);
+  transition: opacity 0.2s, transform 0.2s;
+  text-decoration: none; display: block;
+}
+.sticky-action.hidden { opacity: 0; pointer-events: none; }
+
+/* ── SECTION TRACKER ── */
+.section-lead { 
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-4); text-transform: uppercase;
+  letter-spacing: 0.07em; padding: 16px 32px 8px; 
+}
+
+/* ── PRINT ── */
+@media print {
+  .sticky-nav, .toolbar, .filter-bar, .thread-strip, .sticky-action { display: none !important; }
+  .section-body { display: block !important; }
+  .chevron { display: none; }
+  .tmo-annotation { display: block !important; border-left: 2px solid #333; }
+  body { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<div class="sticky-nav" id="sticky-nav">
+  <span class="sticky-issue">Issue #2</span>
+  <div class="sticky-divider"></div>
+  <div class="sticky-sections">
+    <a class="ssec" href="#s-lending">01 Lending</a>
+    <a class="ssec" href="#s-gtm">02 GTM</a>
+    <a class="ssec" href="#s-frontier">03 Models</a>
+    <a class="ssec" href="#s-media">04 Media</a>
+    <a class="ssec" href="#s-compliance">05 Compliance</a>
+    <a class="ssec" href="#s-macro">06 Macro</a>
+    <a class="ssec actions" href="#actions">↓ Actions</a>
+  </div>
+  <div class="sticky-divider"></div>
+  <button class="sticky-lens active" id="sticky-lens-btn" onclick="toggleLens()">
+    <span class="sl-dot"></span>TMO Lens
+  </button>
+</div>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-left">
+    <a href="/" class="back-link">← AI Frontier Digest</a>
+    <div class="issue-serif">Issue #2</div>
+  </div>
+  <div class="masthead-right">
+    <span class="masthead-date">May 18, 2026</span>
+    <span class="masthead-tag">Internal · Not for distribution</span>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="btn-group">
+    <button class="tbtn" onclick="expandAll()">Expand all</button>
+    <button class="tbtn" onclick="collapseAll()">Collapse all</button>
+  </div>
+  <button class="tbtn" onclick="copyIssueLink()">Copy link</button>
+  <button class="lens-btn active" id="lens-btn" onclick="toggleLens()">
+    <span class="lens-indicator"></span>TMO Lens
+  </button>
+</div>
+
+<!-- THREAD STRIP -->
+<div class="thread-strip">
+  <span class="ts-label">Active threads</span>
+  <span class="ts-count">Issue #2 · 3 open</span>
+  <a class="t-chip escalating" href="#threads">
+    <span class="cdot"></span>
+    <span class="cname">LoanPro / Nortridge AEO siege</span>
+    <span>— escalating</span>
+  </a>
+  <a class="t-chip active" href="#threads">
+    <span class="cdot"></span>
+    <span class="cname">Anthropic / OpenAI enterprise race</span>
+    <span>— active</span>
+  </a>
+  <a class="t-chip active" href="#threads">
+    <span class="cdot"></span>
+    <span class="cname">Colorado AI Act replacement</span>
+    <span>— watch</span>
+  </a>
+</div>
+
+<!-- WHAT SHIPPED STRIP -->
+<div class="shipped-strip">
+  <div class="shipped-header">
+    <span class="shipped-label">What shipped this week</span>
+    <span class="shipped-note">6 releases · May 11–18, 2026</span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">Anthropic · Funding</span>
+    <span class="s-desc">$30B round co-leads named: Dragoneer, Greenoaks, Sequoia, Altimeter. Pre-money valuation >$900B — would surpass OpenAI's $852B. Round expected to close by end of May.</span>
+    <span class="s-meta">
+      <span class="s-date">May 15</span>
+      <span class="s-tmo" title="TMO vendor stack relevance"></span>
+    </span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">Anthropic · Revenue</span>
+    <span class="s-desc">Q1 2026 annualized revenue disclosed: $30B+ ARR, 80x year-over-year growth. Claude Code generating $2.5B alone. Most recent private round was $380B in February.</span>
+    <span class="s-meta">
+      <span class="s-date">May 11</span>
+      <span class="s-tmo" title="TMO vendor stack relevance"></span>
+    </span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">HubSpot · AEO Sensor</span>
+    <span class="s-desc">Free public AI visibility dashboard GA. Tracks daily volatility, weekly AI-referred traffic, and industry citation benchmarks across ChatGPT, Gemini, and Perplexity — no login required.</span>
+    <span class="s-meta">
+      <span class="s-date">May 14</span>
+      <span class="s-tmo" title="TMO AEO relevance"></span>
+    </span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">Google · I/O preview</span>
+    <span class="s-desc">Gemini Omni leaked May 13 — unified text/image/video pipeline. I/O keynote May 19; Gemini 4.0, Android XR glasses, Gemini Spark persistent agent widely expected.</span>
+    <span class="s-meta">
+      <span class="s-date">May 13</span>
+    </span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">Colorado · SB 26-189</span>
+    <span class="s-desc">Replacement AI Act passed legislature (56–7 vote). Narrow framework covering transparency and notice only — eliminates most of SB 24-205's algorithmic discrimination compliance requirements. Awaiting Gov. Polis signature.</span>
+    <span class="s-meta">
+      <span class="s-date">May 9</span>
+      <span class="s-tmo" title="TMO compliance relevance"></span>
+    </span>
+  </div>
+
+  <div class="shipped-row">
+    <span class="s-co">Runway · Gen-4.5 + Characters</span>
+    <span class="s-desc">Gen-4.5 now available via API with image-to-video support. Runway Characters launched — real-time intelligent avatars accessible via API and web demo.</span>
+    <span class="s-meta">
+      <span class="s-date">May 13</span>
+      <span class="s-tmo" title="TMO media relevance"></span>
+    </span>
+  </div>
+</div>
+
+<!-- SINCE LAST ISSUE -->
+<div class="since-box">
+  <div class="box-label">Since last issue — Issue #1 watching-next reconciliation</div>
+  <ul class="delta-list">
+    <li><strong>Mortgage Automator / LendingWise AI announcement: did not fire</strong> — neither company made an AI-specific announcement in the past 7 days. LendingWise competitor page remains queued; MA comparison page stays live as is.</li>
+    <li><strong>HubSpot Breeze + Gong/G2 MCP playbooks: partially fired</strong> — HubSpot shipped AEO Sensor (May 14), a free visibility dashboard. Specific Gong MCP workflow playbooks have not appeared in Academy content yet. Monitor through Issue #3.</li>
+    <li><strong>Anthropic pre-deployment evaluation framework: partially fired</strong> — Opus 4.7 (April 16) launched with real-time cybersecurity safeguards as the first public test run of the graduated-release framework. No standalone formal document published. The $900B round signals this program is scaling, not retreating.</li>
+    <li><strong>Claude Code rate limits doubled (Issue #1) → confirmed stable</strong> — no reported regressions since the SpaceX Colossus capacity expansion. Vendor reliability watch thread resolved.</li>
+    <li><strong>Sora sunset confirmed</strong> — app/web discontinued April 26; API sunset September 2026. Any TMO video workflow touching Sora (directly or via HeyGen's model library) needs a migration path before September.</li>
+  </ul>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn f-active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('red', this)">
+    <span class="fdot" style="background:var(--red)"></span>Threats
+  </button>
+  <button class="filter-btn" onclick="setFilter('yellow', this)">
+    <span class="fdot" style="background:#b8860b"></span>Watch
+  </button>
+  <button class="filter-btn" onclick="setFilter('green', this)">
+    <span class="fdot" style="background:var(--green)"></span>Active
+  </button>
+</div>
+
+<p class="section-label">This week's developments</p>
+
+<!-- SECTIONS -->
+<div class="sections">
+
+<!-- 01 LENDING -->
+<div class="section open" id="s-lending">
+  <div class="section-header" onclick="toggle('s-lending')">
+    <div class="section-num">01</div>
+    <div class="section-title">Lending &amp; Fintech AI</div>
+    <div class="section-badge">highest weight</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">The AEO citation battle is entering a measurement phase. New tooling (HubSpot AEO Sensor, Microsoft Clarity Citations) makes the visibility gap quantifiable for the first time. No new LOS ships from major competitors this week — the story is structural, not product-by-product.</p>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-red"><span class="s-dot"></span>threat</span>
+        <span class="item-name">AEO Siege: Citation Surface Now Measurable</span>
+        <span class="relevance">highest TMO relevance</span>
+      </div>
+      <div class="item-body">HubSpot's AEO Sensor (GA May 14) and Microsoft Clarity's Citations dashboard (GA this week) together make it possible — for the first time — to measure exactly how often a brand appears in ChatGPT, Gemini, and Perplexity answers versus competitors. HubSpot's own data shows 42% of CRM software buyers now use AI search in their evaluation process. AI-referred traffic in HubSpot's network hit a 12-month low in April 2026, but the conversion rate on that traffic is reportedly 4–23x higher than organic. The right frame is not volume — it's citation share and sentiment in the AI answer, not the click through to the site.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        Set up HubSpot AEO Sensor for "loan servicing software," "mortgage servicing platform," and "private lending software" prompts immediately. This is free and generates a visibility score within 48 hours. The results will either validate or falsify the Issue #1 hypothesis that LoanPro's listicles are owning the citation surface for TMO's category.
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-red"><span class="s-dot"></span>threat</span>
+        <span class="item-name">LoanPro AEO Listicle: Still Active, No New Ships</span>
+      </div>
+      <div class="item-body">No new LoanPro or Nortridge product ships detected in the past 7 days. However, LoanPro's "10 Best Loan Origination Software 2026" and "10 Best Loan Management Software 2026" listicles remain indexed and updated. The threat is not a new product launch — it's the structural advantage of being the company whose content answers the evaluation prompts. Nortridge's "11 Best Mortgage Lending Software 2026" continues to carry the "legacy Windows-based client applications" characterization of TMO that is being scraped into AI model training and answer surfaces. <span class="verify">⚠ verify current Nortridge page language unchanged</span></div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        The citation audit from Issue #1 action list is now overdue. Run it this week against ChatGPT, Gemini, and Perplexity using AEO Sensor benchmarks as a baseline. The outputs will inform what counter-content to prioritize.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Mortgage Automator / LendingWise: No AI Announcement</span>
+      </div>
+      <div class="item-body">Both companies remain on the competitor page target list without AI-specific announcements. Mortgage Automator's G2 presence (4.9★, 112 reviews) continues to compound. LendingWise competitor page remains queued. The absence of an AI announcement this week is not inactivity — both companies are likely building quietly ahead of a conference-anchored launch window in H2 2026.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Ocrolus Conditioning: Adoption Velocity Signals Moat Risk</span>
+      </div>
+      <div class="item-body">Ocrolus's automated conditioning GA'd April 1, with Encompass sync and full condition lifecycle management. The company is adding roughly three new mortgage lender logos per week, with 400+ lenders now on platform. The volume is significant: 750,000 credit applications processed monthly. For TMO's CDFI and government-agency segment, the practical question is whether any shared buyers are standardizing on Ocrolus conditioning — and whether that creates a dependency that shapes their platform expectations. <span class="verify">⚠ verify Ocrolus funder count vs. Issue #1 baseline</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 02 GTM -->
+<div class="section" id="s-gtm">
+  <div class="section-header" onclick="toggle('s-gtm')">
+    <div class="section-num">02</div>
+    <div class="section-title">GTM Tooling</div>
+    <div class="section-badge">high weight</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">AEO measurement tooling matured materially this week. The question has shifted from "should we care about AI visibility" to "what's our score right now and what do we do about it." Two free tools now make that answer immediate.</p>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">HubSpot AEO Sensor: Free AI Visibility Dashboard GA</span>
+        <span class="relevance">highest TMO relevance</span>
+      </div>
+      <div class="item-body">HubSpot launched AEO Sensor on May 14, 2026 — a free, public dashboard with no login required. It tracks three data streams: daily answer engine volatility scores (based on mention rate, citation rate, and AI-referred traffic across ChatGPT, Gemini, Perplexity); weekly AI-referred traffic trend estimates; and weekly visibility benchmarks by industry. Notably, HubSpot's own network data showed ChatGPT generating its lowest business referral traffic in 12 months during April 2026 — not because AI search is losing reach, but because AI is answering more questions without generating a click. Paid HubSpot AEO ($50/mo standalone) gives brand-level tracking; AEO Sensor gives the industry-level context to know whether a score shift is market-wide or brand-specific.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        AEO Sensor is the industry-level read; paid HubSpot AEO is the TMO-specific score. Use Sensor immediately to benchmark the "financial software" and "lending software" category volatility — if AEO Sensor shows high volatility in the category, TMO is not the only brand losing ground. That context changes the urgency framing for the investment conversation.
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">HubSpot AEO Content Actions: June 2026 Ship</span>
+      </div>
+      <div class="item-body">HubSpot announced that "Content Actions" — the ability to publish directly from the AEO interface to act on visibility recommendations — is shipping June 2026. Today, HubSpot AEO identifies visibility gaps and recommends content types, but execution requires switching out of AEO into content creation tools. The June ship closes the loop. For Marketing Hub Pro and Enterprise users, this makes HubSpot AEO a complete cycle: measure visibility → receive recommendation → publish content → re-measure. This is what separates HubSpot AEO from standalone tools like Profound.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        If TMO is on Marketing Hub Pro or Enterprise, Content Actions in June eliminates the argument for a multi-tool AEO stack. Decision point: commit to HubSpot AEO before June ship or continue evaluating alternatives (Profound, Microsoft Clarity Citations). The June ship makes the single-platform case substantially stronger.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">Microsoft Clarity Citations Dashboard: GA</span>
+      </div>
+      <div class="item-body">Microsoft Clarity moved its Citations dashboard to general availability this week. The feature gives publishers visibility into how AI systems retrieve, evaluate, and cite their content before users visit the site — measuring page citations, share of authority, AI referral traffic, grounding queries, and cited pages inside AI-generated responses. This is a free alternative to HubSpot AEO Sensor for citation-level tracking, without the industry benchmark component. The broader signal: measurement tooling for AEO is now as mature as SEO analytics was in 2015. The brands that move fastest in the next 60 days are building lasting citation advantages.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">ChatGPT Referral Traffic Decline: What It Actually Means</span>
+      </div>
+      <div class="item-body">HubSpot's AEO Sensor launch data is anchored on a counterintuitive finding: ChatGPT sent its lowest business referral traffic in 12 months during April 2026. Simultaneously, AI-referred traffic converts at 4–23x the rate of organic search. The explanation is structural: AI search is delivering more complete answers, reducing the percentage of queries that generate a click — but the queries that do click through represent higher buyer intent. The implication for B2B software brands is that the right KPI is citation share and answer sentiment, not traffic volume from AI sources. Traditional web analytics dashboards are measuring the wrong thing.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 03 FRONTIER MODELS -->
+<div class="section" id="s-frontier">
+  <div class="section-header" onclick="toggle('s-frontier')">
+    <div class="section-num">03</div>
+    <div class="section-title">Frontier Models &amp; Agents</div>
+    <div class="section-badge">mid weight</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">Anthropic disclosed a financial velocity that nobody in the industry has matched: $30B ARR at 80x growth. A $900B+ valuation round is assembling while Google I/O (May 19) is expected to produce the first serious challenge to Anthropic's benchmark dominance in 2026.</p>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">Anthropic: $30B ARR, $900B Round Assembling</span>
+        <span class="relevance">high TMO relevance</span>
+      </div>
+      <div class="item-body">On May 11, Anthropic disclosed that its annualized revenue run rate has surpassed $30B, representing roughly 80x year-over-year growth. Sources peg the actual current run rate closer to $40B. On May 15, The Information confirmed round co-leads: Dragoneer, Greenoaks, Sequoia, and Altimeter. The pre-money valuation is $900B+; at close, Anthropic would surpass OpenAI's $852B valuation from its March 2026 round. This is expected to be Anthropic's final private round before an IPO targeted for October 2026. Claude Code alone is generating $2.5B ARR. The funding dynamic matters operationally: Anthropic needs capital for compute infrastructure, and this round funds the SpaceX Colossus expansion and Google/Broadcom chip partnerships announced in April.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        Vendor stability argument strengthens materially. The "will Anthropic still exist in two years" risk vector is essentially closed at a $900B valuation with an October IPO in view. This is now a first-tier citation point for TMO's regulated-buyer positioning: "We build on enterprise-grade AI infrastructure, not experimental technology."
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Google I/O (May 19): Gemini 4.0 + Omni Expected</span>
+      </div>
+      <div class="item-body">Google's I/O keynote is tomorrow (May 19, 10am PT). From confirmed announcements and leaks: Gemini Omni (leaked May 13) is a unified text/image/video generation pipeline integrated with YouTube. Android XR glasses are confirmed — Samsung "Jinju", XREAL, Warby Parker, Gentle Monster as hardware partners. Aluminium OS (merged Android/ChromeOS) first Googlebook laptops from Acer, ASUS, Dell, HP, Lenovo. A Gemini 4.0 or Gemini 3.5 Pro upgrade is widely expected; one report places its performance in the class of GPT-5.5, below Mythos. Gemini Spark (persistent AI agent) is among the strongest rumors. Google's Android Show pre-event already shipped Gemini Intelligence for Android. <span class="verify">⚠ verify Gemini 4.0 vs 3.5 Pro naming — reports conflict</span></div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">Claude Cowork: Now GA on All Paid Plans</span>
+      </div>
+      <div class="item-body">Claude Cowork (desktop agentic tool for file and task management) is now generally available on macOS and Windows for all paid plan subscribers. The GA includes organization controls for company-wide deployment: role-based access, group spend limits, expanded OpenTelemetry, and Zoom connector support. Claude Code access is now included with every Team plan standard seat. Code w/ Claude developer events are scheduled for London (May 20–21) and Tokyo (June 5–6), with keynotes streamed live. The Advisor Tool — a Sonnet executor + Opus advisor multi-agent pattern — is in beta, showing meaningful benchmark improvements for complex coding workflows.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        The Cowork GA with role-based access and spend controls is the enterprise deployment story that justifies a TMO organization-wide Claude rollout. If TMO is piloting Cowork in any department (marketing engineering, PMM, operations), now is the time to consolidate under a Team or Enterprise plan before ad-hoc usage creates ungoverned spend.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">OpenAI Superapp: No Timeline, Still Consolidating</span>
+      </div>
+      <div class="item-body">No new timeline announcement on the ChatGPT + Codex + Atlas browser superapp consolidation. Internal reorganization continues under Fidji Simo (CEO of Applications) and Greg Brockman (technical oversight). The first major preview is expected before end of 2026. Codex will expand beyond coding to broader productivity use cases before the full merge. Atlas (Chromium-based AI browser) has not gained meaningful market traction against Perplexity Comet. The Sora App, briefly the top download on the App Store, flatlined and is now being folded into the main ChatGPT app. OpenAI internally described Anthropic's rise as a "code red" and a "wake-up call."</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 04 MEDIA GENERATION -->
+<div class="section" id="s-media">
+  <div class="section-header" onclick="toggle('s-media')">
+    <div class="section-num">04</div>
+    <div class="section-title">Media Generation</div>
+    <div class="section-badge">high weight — marketing core</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">Sora's April 26 shutdown restructured the AI video market. The $15M/day compute burn against $2.1M lifetime revenue was untenable. What follows is a healthier, more competitive market — Runway, Kling, Veo, and Pika dividing $2.4B in addressable spend. Any workflow built on Sora needs a migration plan before September.</p>
+
+    <h3 class="sub">Video</h3>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-red"><span class="s-dot"></span>deprecated</span>
+        <span class="item-name">Sora: App Shut Down April 26 — API Sunset September 2026</span>
+        <span class="relevance">high TMO relevance</span>
+      </div>
+      <div class="item-body">OpenAI discontinued the Sora web and app experiences on April 26, 2026. The Sora API will follow on September 24, 2026. Cost was the driver: $1.30 per 10-second clip, $15M/day burn rate, $2.1M total lifetime revenue. Disney had walked away from a reported $1B investment deal. The market has restructured around four platforms: Runway (quality + brand consistency, enterprise-preferred), Kling 3.0 (best value at $0.07/second), Google Veo 3.1 (native audio, ecosystem integration, YouTube tools), and Pika (social creator workflows, Pikaformance lip-sync). Runway Gen-4 Turbo is currently the strongest for professional production; Veo 3.1 is the strongest for native audio.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        Audit any TMO video production workflows that touch Sora directly or via HeyGen's model library (HeyGen surfaces Sora 2 Pro as one of its available models). Migration to Runway Gen-4.5 or Veo 3.1 is required before September. Runway is the recommendation for brand-consistency-forward B2B marketing workflows; Veo 3.1 is worth testing for explainer content where native audio matters.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Gemini Omni: Leaked Unified Video/Image/Text Model</span>
+      </div>
+      <div class="item-body">A UI string surfaced inside the Gemini interface May 13, pointing to a new unified model capable of generating text, images, and video in a single pipeline — "Gemini Omni." Demonstrations reportedly show conversational video generation, remixing, and editing with realistic movement and text rendering. If confirmed at I/O tomorrow, Omni integrated with YouTube tools would give Google a full-stack AI media platform spanning creation, editing, and distribution. This would be a direct strategic challenge to the Runway-dominant professional workflow market, with Google's distribution advantage as the differentiator.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">Runway Gen-4.5 API + Runway Characters</span>
+      </div>
+      <div class="item-body">Runway released Gen-4.5 via the API with image-to-video capabilities and a public try site. Gen-4.5 supports text-to-video and image-to-video with durations from 2–10 seconds at 4K, with improved control and quality. Simultaneously, Runway launched Runway Characters — real-time intelligent avatars accessible via API and web demo. Also notable: Runway's API now surfaces Kling 3.0, Kling 2.6 Pro, WAN2.2 Animate, GPT-Image-1.5, and other third-party models directly, positioning Runway as a video AI hub rather than a single-model service.</div>
+    </div>
+
+    <h3 class="sub">Avatar / Voice</h3>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">HeyGen Avatar V: "Most Lifelike Avatar Ever"</span>
+      </div>
+      <div class="item-body">HeyGen announced Avatar V as its most lifelike avatar to date, with improvements in lip-sync accuracy, natural facial expressions, and photo-realistic rendering. HeyGen's platform now surfaces Veo and Kling models alongside Sora 2 Pro for B-roll generation, with ElevenLabs powering voice cloning as the default engine. The Video Agent endpoint (/v1/video_agent/generate) enables prompt-to-complete-video from a single natural language description. HeyGen notes it now supports ElevenLabs V3 Voice Model in its Avatar Video API, adding to existing multilingual support across 175+ languages.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        HeyGen Avatar V + ElevenLabs V3 is the current recommended stack for TMO avatar video production (spokesperson explainers, multilingual content, executive proxy content). The Video Agent endpoint reduces production time to minutes from scripts. Evaluate before next major content cycle; production cost per video has dropped materially since Issue #1.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 05 COMPLIANCE -->
+<div class="section" id="s-compliance">
+  <div class="section-header" onclick="toggle('s-compliance')">
+    <div class="section-num">05</div>
+    <div class="section-title">Compliance &amp; Regulatory AI</div>
+    <div class="section-badge">moat narrative</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">Two major compliance signals converged this week: Colorado's AI Act was effectively neutralized while CFPB Reg B's July 21 effective date accelerates toward lenders. The federal-state tension is live — state AGs are coordinating under Chopra while federal enforcement is pulling back. The net effect is asymmetric risk: lenders who let fair lending governance lapse now face state AG exposure on a 5-year statute of limitations.</p>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>resolved</span>
+        <span class="item-name">Colorado AI Act (SB 24-205) Effectively Neutralized</span>
+        <span class="relevance">high TMO relevance</span>
+      </div>
+      <div class="item-body">Colorado SB 26-189 — the replacement for SB 24-205 — passed the legislature 56–7 on May 9, 2026, and is awaiting Governor Polis's signature. The replacement narrows the original law from a comprehensive algorithmic discrimination framework to a narrow transparency and notice requirement, eliminating the annual review, impact assessment, and outcome-reporting requirements that had generated broad industry opposition. The April 27 enforcement stay (resulting from xAI's constitutional challenge and DOJ intervention) means SB 24-205 will not be enforced on its June 30 effective date regardless. The DOJ intervention marked the first time the federal government has sought to invalidate a state AI law — establishing a precedent for federal preemption that will shape similar laws in Illinois, Texas, and California.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        If Polis signs SB 26-189, the compliance documentation bar for algorithmic lending tools drops significantly from what SB 24-205 would have required. Update the compliance framing for ProPilot and Pulse: the immediate Colorado risk is resolved, but state AG enforcement under existing ECOA/FHA theories is unaffected and actually intensifying through Chopra's DAGA coordination. → see Granola / May 14 AI Council.
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-header">
+        <span class="status s-red"><span class="s-dot"></span>threat</span>
+        <span class="item-name">CFPB Reg B: July 21 Effective Date Approaching</span>
+      </div>
+      <div class="item-body">The CFPB's April 22, 2026 final rule amending Regulation B takes effect July 21, 2026. Three key changes: (1) disparate impact analysis eliminated as grounds for CFPB enforcement actions; (2) fair lending protections extended to business borrowers, not just consumers; (3) special purpose credit programs (SPCPs) cannot target beneficiaries by race or ethnicity. The first change benefits lenders relying on AI underwriting models that produce statistical disparities without proven discriminatory intent. The second change is potentially meaningful for TMO's government agency and CDFI customers who also serve business borrowers. Critically: state attorneys general can still pursue disparate impact claims under the Fair Housing Act (2-year statute) and ECOA (5-year statute) — the federal rollback does not close state exposure.</div>
+      <div class="tmo-annotation">
+        <span class="annot-label">→ TMO</span>
+        Brief leadership before July 21 on what changed and what didn't. The short version: CFPB enforcement posture is looser but state AG enforcement is coordinating under Chopra's playbook at DAGA. For TMO's regulated-buyer positioning (CDFIs, government agencies), the compliance story is now "we maintain governance standards that exceed the current federal floor" — a stronger moat narrative than baseline compliance.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-red"><span class="s-dot"></span>threat</span>
+        <span class="item-name">State AG Coordination Under Chopra Intensifying</span>
+      </div>
+      <div class="item-body">Former CFPB Director Rohit Chopra, now advising the Democratic Attorneys General Association's Consumer Protection &amp; Affordability Working Group, has been building coordinated AI enforcement strategies across state AGs using shared data and legal theories. While federal enforcement of disparate impact is contracting, state-level coordination is expanding. The practical consequence: lenders who rely on federal regulatory rollback to reduce AI governance overhead are accumulating multi-year statute-of-limitations exposure that could be triggered by a future federal administration or private plaintiff action.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 06 MACRO -->
+<div class="section" id="s-macro">
+  <div class="section-header" onclick="toggle('s-macro')">
+    <div class="section-num">06</div>
+    <div class="section-title">Macro &amp; Market</div>
+    <div class="section-badge">context</div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="section-body">
+    <p class="section-intro">AI is repricing as infrastructure. The Anthropic round at $900B is not venture capital — it's critical-infrastructure financing. The same dynamic that sent software stock multiples down 20% YTD is the dynamic sending AI lab valuations past $1T.</p>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-green"><span class="s-dot"></span>active</span>
+        <span class="item-name">Anthropic Poised to Surpass OpenAI in Valuation</span>
+      </div>
+      <div class="item-body">If the $30B round closes at $900B pre-money, Anthropic's post-money valuation will exceed OpenAI's $852B March 2026 figure — the first valuation reversal since both companies emerged. The underlying driver is not hype: Anthropic has $30B+ ARR, enterprise customers spending $100K+ annually grew 7x year-over-year, and million-dollar customers grew from 12 two years ago to 500+. An IPO is targeting October 2026 in what would likely be the largest tech IPO since the 2021 wave. Early investors who got in at $61.5B (March 2025) are sitting on roughly 15x in 14 months.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Google I/O as Platform Reset Signal</span>
+      </div>
+      <div class="item-body">Google I/O (tomorrow, May 19) is the first major platform event since Anthropic's valuation overtake became plausible and OpenAI's superapp consolidation was announced. Gemini 4.0 + Omni + Android XR + Aluminium OS together represent Google's argument that distribution and ecosystem integration beats benchmark performance. If Gemini 4.0 lands with competitive benchmarks, the multi-model vendor conversation reopens broadly. If it underperforms against Opus 4.7, the trend toward Anthropic as the default enterprise AI layer accelerates.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-yellow"><span class="s-dot"></span>watch</span>
+        <span class="item-name">Meta Avocado: Delayed, Benchmarks Reportedly Below Competition</span>
+      </div>
+      <div class="item-body">Meta's next-generation open-weights model, codenamed Avocado, was expected in May or June 2026. As of May 18, no announcement. Internal testing reportedly placed Avocado between Gemini 2.5 and 3.0 — below GPT-5.5 and Claude Opus 4.7 benchmarks. With Google I/O tomorrow, Meta faces a timing problem: announce before I/O and get buried, announce the same week and invite unfavorable direct comparison. Every week of delay is a week Chinese open-source labs (Kimi K2.6, DeepSeek V4, GLM-5.1) extend their lead in the open-weights tier. Meta spent $115–135B on AI capex in 2026; the model needs to show for it.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="status s-blue"><span class="s-dot"></span>watching</span>
+        <span class="item-name">Software Stock Disruption: AI Value Migration</span>
+      </div>
+      <div class="item-body">Anthropic's model release cadence has contributed to a 20%+ YTD decline in the iShares Expanded Tech-Software Sector ETF (IGV) as investors reprice software companies' growth assumptions downward in light of AI automation capability. The Sonnet 4.6 launch (February 2026) brought Opus-level coding to free and Pro tier users — eliminating one of the arguments for mid-tier SaaS tooling in software development workflows. This dynamic is structural, not cyclical.</div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /sections -->
+
+<!-- THREAD TRACKER -->
+<div class="thread-tracker" id="threads">
+  <p class="tracker-label" style="margin-top:28px;">Open threads</p>
+  <div class="thread-grid">
+
+    <div class="thread-card escalating">
+      <div class="thread-issue">Issue #1 → #2 · 🔴 escalating</div>
+      <div class="thread-name">LoanPro / Nortridge AEO Siege</div>
+      <div class="thread-body">LoanPro's "Best Loan Origination / Management Software 2026" listicles continue to index and circulate in AI model training data. Nortridge's competitive characterization of TMO ("legacy Windows-based client applications," "manual steps") persists on their citation surface. Issue #2 update: HubSpot AEO Sensor and Microsoft Clarity Citations now make the visibility gap measurable for the first time. The threat has been quantifiable for seven days and TMO has not yet run a baseline. This is the escalation trigger — not new competitor content, but available measurement tools going unused.</div>
+    </div>
+
+    <div class="thread-card active">
+      <div class="thread-issue">Issue #1 → #2 · 🟢 active</div>
+      <div class="thread-name">Anthropic / OpenAI Enterprise Race</div>
+      <div class="thread-body">Anthropic's $900B round and 80x revenue acceleration are the clearest signal yet of which lab is winning the enterprise market. OpenAI's superapp consolidation (announced March 19) is a reactive move — internal memos explicitly name Anthropic's rise as the trigger. Claude Code generating $2.5B ARR alone is the competitive fact that explains OpenAI's internal "code red." Claude Cowork is now GA on all paid plans. Issue #2 update: no OpenAI superapp preview timeline announced. Google I/O (May 19) is the next inflection point.</div>
+    </div>
+
+    <div class="thread-card active">
+      <div class="thread-issue">Issue #2 new · 🟢 watch</div>
+      <div class="thread-name">Colorado AI Act: SB 26-189 Awaiting Signature</div>
+      <div class="thread-body">The original SB 24-205 has been stayed and is being replaced by the narrower SB 26-189, which passed the Colorado legislature 56–7. Gov. Polis is expected to sign; he reluctantly signed the original law and publicly asked the legislature to revisit it. If signed, the compliance documentation bar for algorithmic lending drops significantly from the original bill's requirements. If Polis vetoes (low probability), watch for state-level AI governance to become a live issue again. For other states watching Colorado, the DOJ's first-ever state AI law intervention creates a federal preemption precedent that will slow state-level algorithmic discrimination legislation through at least the rest of 2026.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TMO GRANOLA BOX -->
+<div class="tmo-box">
+  <div class="box-label">Granola · Past 14 days · Monthly AI Council, Vital Weekly, Profound sync</div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 14 · Monthly AI Council</div>
+    <div class="tmo-text">The AEO Sensor launch came up directly: the question was whether TMO should set up tracking now or wait until the competitor page program is further along. The risk of waiting is that a month of data is already generating in the category — competitors with early accounts are building historical baselines TMO won't be able to reconstruct. Setup is free and takes 20 minutes. The blocker is not cost or capacity; it's a decision. → see 02 / HubSpot AEO Sensor.</div>
+    <div class="tmo-status ts-high">🔴 high priority — decision needed this week</div>
+  </div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 12 · Vital Weekly</div>
+    <div class="tmo-text">LendingWise competitor page is queued but not yet assigned. Mortgage Automator went live April 27 and is performing as expected — the page is indexed, the comparison language is clean. Decision was made to queue Nortridge next rather than LendingWise, based on the AEO citation threat being more active from Nortridge's "11 Best Mortgage Lending Software" page. Timeline for Nortridge page: June production window.</div>
+    <div class="tmo-status ts-active">🟢 active — on track</div>
+  </div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 11 · Profound sync</div>
+    <div class="tmo-text">Reg B July 21 effective date came up as something leadership hasn't been briefed on. The concern was not compliance risk per se — TMO's underwriting logic is servicing-side, not origination — but the positioning opportunity: the Reg B change removes federal enforcement of disparate impact while leaving state AG exposure intact. TMO's CDFI and government-agency segment cares about state AG exposure more than federal enforcement. A one-page brief ahead of July 21 was flagged as a priority. → see 05 / CFPB Reg B.</div>
+    <div class="tmo-status ts-high">🔴 high priority — brief due before July 21</div>
+  </div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 8 · TMO + Onyx procurement review</div>
+    <div class="tmo-text">Claude Cowork GA with role-based access and spend controls was noted as removing the last procurement blocker for a TMO-wide Cowork deployment. The prior blocker was "no visibility into individual usage" — the new Enterprise Analytics API closes that gap. Procurement conversation now moves to: which teams pilot first, and what's the governance model? → see 03 / Claude Cowork GA.</div>
+    <div class="tmo-status ts-watch">🔵 watch — governance model decision pending</div>
+  </div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 7 · AI Council working session</div>
+    <div class="tmo-text">HeyGen Avatar V was demoed. The room's read: production quality is now high enough to use for TMO executive proxy content (conference explainers, product demos, multilingual versions of marketing assets). The open question is consent and disclosure — does TMO disclose that marketing video is AI-generated? No decision made; flagged for PMM policy review before any production run. → see 04 / HeyGen Avatar V.</div>
+    <div class="tmo-status ts-watch">🔵 watch — policy decision needed before production</div>
+  </div>
+
+</div>
+
+<!-- ACTIONS -->
+<div class="actions-box" id="actions">
+  <div class="box-label">Prioritized — marketing engineer + PMM lens</div>
+  <div class="action-item">
+    <div class="action-num">01</div>
+    <div class="action-text"><strong>Set up HubSpot AEO Sensor for TMO's core prompts — today.</strong> Free, 20 minutes, no credit card. Prompts: "loan servicing software 2026," "mortgage servicing platform," "private lending software." Benchmark against LoanPro and Nortridge. First data in 48 hours. Produces a visibility baseline that either validates the Issue #1 threat hypothesis or recalibrates the urgency. This is the prerequisite for every other content decision.</div>
+  </div>
+  <div class="action-item">
+    <div class="action-num">02</div>
+    <div class="action-text"><strong>Run the overdue LLM citation audit against ChatGPT, Gemini, and Perplexity.</strong> Prompt: "describe The Mortgage Office as a loan servicing platform" and "best mortgage loan servicing software 2026." Screenshot results. Cross-reference with AEO Sensor benchmark data. Produces the proof-point artifact for every internal conversation about the AEO investment, and establishes whether Nortridge's "legacy Windows" framing has penetrated AI model answers. (This was Issue #1 action #2 — it's now overdue.)</div>
+  </div>
+  <div class="action-item">
+    <div class="action-num">03</div>
+    <div class="action-text"><strong>Write the Reg B one-pager for leadership before July 21.</strong> One page: what changed (disparate impact removed from federal CFPB enforcement), what didn't (state AG exposure under FHA 2-year and ECOA 5-year statutes), and what TMO's compliance narrative should be for regulated buyers. Produces a briefing artifact and reframes the compliance moat story for the CDFI and government agency segment.</div>
+  </div>
+  <div class="action-item">
+    <div class="action-num">04</div>
+    <div class="action-text"><strong>Audit any TMO video workflows touching Sora.</strong> Check HeyGen model library settings — HeyGen surfaces Sora 2 Pro as an available model and will need a swap to Veo 3.1 or Runway Gen-4.5 before September 24, 2026 API sunset. Five-minute workflow check; produces a migration plan or confirms no exposure.</div>
+  </div>
+</div>
+
+<!-- WATCHING NEXT -->
+<div class="watching-section">
+  <p class="box-label" style="padding:0;margin-bottom:0;">Watching next — Issue #3 triggers</p>
+  <div class="watching-grid">
+
+    <div class="watch-card">
+      <div class="watch-num">Watch #1</div>
+      <div class="watch-trigger">Google I/O · Gemini 4.0 benchmarks (May 19)</div>
+      <div class="watch-if">
+        If <em>Gemini 4.0 benchmarks at or above Claude Opus 4.7</em>, then the vendor selection conversation for TMO's AI stack reopens — Google's distribution advantage makes Gemini a credible alternative for marketing and servicing applications.
+        <span>If not</span>, Anthropic's benchmark position holds for another cycle and the TMO vendor rationale strengthens.
+      </div>
+    </div>
+
+    <div class="watch-card">
+      <div class="watch-num">Watch #2</div>
+      <div class="watch-trigger">Governor Polis signs / vetoes SB 26-189</div>
+      <div class="watch-if">
+        If <em>Polis signs the narrow replacement bill</em>, then Colorado's compliance documentation bar drops significantly, and the state AG precedent (not federal enforcement) becomes the governing risk for TMO's AI features in Colorado-adjacent markets.
+        <span>If he vetoes</span>, the original SB 24-205 saga reopens and the stay may not hold — watch for emergency legislation.
+      </div>
+    </div>
+
+    <div class="watch-card">
+      <div class="watch-num">Watch #3</div>
+      <div class="watch-trigger">Anthropic $30B round close (expected end of May)</div>
+      <div class="watch-if">
+        If <em>round closes at $900B+ valuation by May 31</em>, then Anthropic surpasses OpenAI in valuation — first vendor stability inflection point of 2026. TMO's "enterprise-grade AI infrastructure" narrative gains a concrete proof point.
+        <span>If delayed</span>, watch for pricing or capacity pressure on the Claude stack as the company manages burn without the new capital.
+      </div>
+    </div>
+
+    <div class="watch-card">
+      <div class="watch-num">Watch #4</div>
+      <div class="watch-trigger">HubSpot AEO Content Actions (June 2026 ship)</div>
+      <div class="watch-if">
+        If <em>Content Actions ships on schedule in June</em>, then the case for HubSpot AEO as TMO's single AEO execution layer closes — measurement and publishing unified in one tool, eliminating the Profound alternative.
+        <span>If delayed</span>, evaluate Profound as a standalone AEO tool for the interim window, particularly for the competitor page citation analysis workflow.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-left">The Mortgage Office · AI Frontier Digest · Issue #2 · May 18, 2026</span>
+  <span class="footer-right">Internal · Not for distribution</span>
+</footer>
+
+<!-- STICKY ACTIONS BTN -->
+<a class="sticky-action" id="sticky-btn" href="#actions">↓ Actions</a>
+
+<script>
+// ── LENS ──
+let lensOn = true;
+const lensBtn = document.getElementById('lens-btn');
+const stickyLensBtn = document.getElementById('sticky-lens-btn');
+
+function syncLensUI() {
+  if (lensOn) {
+    document.body.classList.add('lens-on');
+    lensBtn.classList.add('active');
+    stickyLensBtn.classList.add('active');
+  } else {
+    document.body.classList.remove('lens-on');
+    lensBtn.classList.remove('active');
+    stickyLensBtn.classList.remove('active');
+  }
+}
+function toggleLens() {
+  lensOn = !lensOn;
+  syncLensUI();
+}
+syncLensUI();
+
+// ── SECTIONS ──
+function toggle(id) {
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.toggle('open');
+}
+function expandAll() {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('open'));
+}
+function collapseAll() {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('open'));
+}
+
+// ── COPY LINK ──
+function copyIssueLink() {
+  navigator.clipboard ? navigator.clipboard.writeText(window.location.href) :
+    (() => { const t = document.createElement('textarea'); t.value = window.location.href; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); })();
+}
+
+// ── FILTER ──
+function setFilter(status, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('f-active'));
+  btn.classList.add('f-active');
+
+  document.querySelectorAll('.item').forEach(item => {
+    if (status === 'all') { item.style.display = ''; return; }
+    const statusEl = item.querySelector('.status');
+    const hasClass = statusEl && statusEl.classList.contains('s-' + status);
+    item.style.display = hasClass ? '' : 'none';
+  });
+
+  document.querySelectorAll('.section').forEach(sec => {
+    if (status === 'all') { sec.style.display = ''; return; }
+    const visible = Array.from(sec.querySelectorAll('.item')).some(i => i.style.display !== 'none');
+    if (visible) { sec.style.display = ''; sec.classList.add('open'); }
+    else { sec.style.display = 'none'; }
+  });
+
+  document.querySelectorAll('h3.sub').forEach(sub => {
+    if (status === 'all') { sub.style.display = ''; return; }
+    let next = sub.nextElementSibling;
+    let anyVisible = false;
+    while (next && !next.classList.contains('sub')) {
+      if (next.classList.contains('item') && next.style.display !== 'none') { anyVisible = true; break; }
+      next = next.nextElementSibling;
+    }
+    sub.style.display = anyVisible ? '' : 'none';
+  });
+}
+
+// ── STICKY NAV ──
+const stickyNav = document.getElementById('sticky-nav');
+function updateStickyNav() {
+  stickyNav.classList.toggle('visible', window.scrollY > 170);
+}
+window.addEventListener('scroll', updateStickyNav, { passive: true });
+updateStickyNav();
+
+document.querySelectorAll('.ssec[href^="#"]').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      const offset = stickyNav.offsetHeight + 12;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+// ── STICKY ACTIONS BTN ──
+const stickyBtn = document.getElementById('sticky-btn');
+const actionsEl = document.getElementById('actions');
+
+function updateStickyBtn() {
+  if (!actionsEl || !stickyBtn) return;
+  const rect = actionsEl.getBoundingClientRect();
+  stickyBtn.classList.toggle('hidden',
+    rect.top < window.innerHeight && rect.bottom > 0 && rect.top < 200
+  );
+}
+window.addEventListener('scroll', updateStickyBtn, { passive: true });
+updateStickyBtn();
+</script>
+</body>
+</html>
