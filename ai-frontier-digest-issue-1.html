@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Frontier Digest — Issue #1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0e0c; --ink-2:#3a3a36; --ink-3:#76746e; --ink-4:#b8b5ac;
+  --paper:#f6f4ef; --surface:#eeece6; --surface-2:#e4e2db; --border:#d8d5cd;
+  /* Amber — TMO relevance only */
+  --amber:#b87d1a; --amber-light:#fdf3e0; --amber-border:#e8c97a;
+  /* Status */
+  --green:#1a6644; --green-bg:#e8f5ee;
+  --yellow:#7a5c00; --yellow-bg:#fffbea;
+  --red:#a02020;   --red-bg:#fdeaea;
+  --blue:#1a4a8c;  --blue-bg:#e8f0fb;
+  --gray:#76746e;  --gray-bg:#f0ede6;
+  --mono:'IBM Plex Mono',monospace;
+  --serif:'Instrument Serif',serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+body{max-width:800px;margin:0 auto;padding:2.5rem 1.75rem 6rem}
+
+/* ─── STICKY NAV ─── */
+.snav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(246,244,239,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:44px;padding:0 1.5rem;display:flex;align-items:center;gap:0.625rem;transform:translateY(-100%);transition:transform 0.22s ease}
+.snav.show{transform:translateY(0)}
+.snav-id{font-family:var(--mono);font-size:10px;color:var(--ink-3);white-space:nowrap;flex-shrink:0}
+.snav-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
+.snav-links{display:flex;gap:1px;flex:1;overflow-x:auto}
+.snav-links::-webkit-scrollbar{display:none}
+.snav-link{font-family:var(--mono);font-size:10px;font-weight:500;padding:4px 9px;border-radius:3px;color:var(--ink-3);text-decoration:none;white-space:nowrap;transition:all 0.12s}
+.snav-link:hover{background:var(--surface);color:var(--ink-2)}
+
+/* ─── MASTHEAD ─── */
+.masthead{border-top:3px solid var(--ink);border-bottom:1px solid var(--border);padding:1.4rem 0;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.mast-back{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;display:block;margin-bottom:0.4rem}
+.mast-back:hover{color:var(--ink)}
+.mast-title{font-family:var(--serif);font-size:2.1rem;font-style:italic;line-height:1.05;color:var(--ink)}
+.mast-meta{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.85}
+
+/* ─── TOOLBAR ─── */
+.toolbar{display:flex;gap:0.375rem;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
+.btn{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;padding:6px 12px;border-radius:3px;border:1px solid var(--border);background:#fff;color:var(--ink-2);cursor:pointer;text-transform:uppercase;transition:all 0.14s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:hover{background:var(--surface);border-color:var(--ink-4)}
+.btn.on{background:var(--amber-light);border-color:var(--amber-border);color:var(--amber)}
+.btn.on .btn-dot{background:var(--amber)}
+.btn-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background 0.14s;flex-shrink:0}
+.btn-sep{width:1px;height:20px;background:var(--border);margin:0 0.2rem;flex-shrink:0}
+
+/* ─── SINCE LAST ISSUE ─── */
+.since-box{border:1px solid var(--border);border-left:3px solid var(--ink);background:#fff;padding:1.1rem 1.4rem;margin-bottom:2rem;font-size:15px;color:var(--ink-2);line-height:1.65}
+.since-label{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:0.5rem}
+
+/* ─── HEADLINES ─── */
+.headlines-box{border:1px solid var(--border);background:#fff;margin-bottom:2.5rem}
+.headlines-hdr{background:var(--surface);padding:0.875rem 1.4rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.headlines-lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3)}
+.headlines-note{font-family:var(--mono);font-size:10px;color:var(--ink-4)}
+.hl{display:flex;align-items:baseline;gap:0.875rem;padding:0.875rem 1.4rem;border-top:1px solid var(--border);cursor:pointer;transition:background 0.12s;text-decoration:none;color:inherit}
+.hl:first-of-type{border-top:none}
+.hl:hover{background:var(--surface)}
+.hl-n{font-family:var(--mono);font-size:11px;color:var(--ink-4);min-width:20px;flex-shrink:0}
+.hl-text{flex:1;font-size:15.5px;color:var(--ink);line-height:1.45}
+.tag-amber{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:0.05em;padding:2px 6px;background:var(--amber-light);color:var(--amber);border-radius:2px;flex-shrink:0;align-self:center}
+
+/* ─── SECTION LABEL ─── */
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 1rem;border-bottom:1px solid var(--border);padding-bottom:0.6rem}
+
+/* ─── SECTIONS ─── */
+.section{border:1px solid var(--border);border-radius:2px;margin-bottom:0.625rem;overflow:hidden}
+.section-hdr{display:flex;align-items:baseline;gap:0.75rem;padding:1rem 1.25rem;cursor:pointer;user-select:none;background:var(--surface);transition:background 0.12s}
+.section-hdr:hover{background:var(--surface-2)}
+.sec-num{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.08em;color:var(--ink-3);min-width:22px;flex-shrink:0}
+.sec-title{font-family:var(--serif);font-size:1.3rem;font-style:italic;color:var(--ink);flex:1;line-height:1.15}
+.sec-badge{font-family:var(--mono);font-size:10px;color:var(--ink-4);flex-shrink:0}
+.chevron{font-family:var(--mono);font-size:10px;color:var(--ink-4);transition:transform 0.18s;flex-shrink:0;margin-left:0.5rem}
+.section.open .chevron{transform:rotate(90deg)}
+.section-body{display:none;border-top:1px solid var(--border);background:#fff}
+.section.open .section-body{display:block}
+
+/* ─── ITEMS ─── */
+.item{padding:0.875rem 1.25rem;border-top:1px solid var(--border)}
+.item:first-child{border-top:none}
+.item-row{display:flex;align-items:baseline;gap:0.625rem;cursor:pointer}
+.item-headline{flex:1;font-size:15px;color:var(--ink);line-height:1.45}
+.item-chevron{font-family:var(--mono);font-size:10px;color:var(--ink-4);transition:transform 0.18s;flex-shrink:0;width:12px;text-align:center}
+.item.open .item-chevron{transform:rotate(90deg)}
+.item-preview{margin-top:0.375rem;font-size:14px;color:var(--ink-3);line-height:1.55;font-weight:300}
+.item-detail{display:none;margin-top:0.875rem;padding-top:0.875rem;border-top:1px dashed var(--border);font-size:14.5px;color:var(--ink-2);line-height:1.65}
+.item.open .item-detail{display:block}
+.item-detail strong{font-weight:500;color:var(--ink)}
+.tmo-note{margin-top:0.75rem;padding:0.5rem 0.75rem;background:var(--amber-light);border-left:2px solid var(--amber-border);font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.tmo-note-lbl{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--amber);display:inline;margin-right:5px;letter-spacing:0.04em;text-transform:uppercase}
+.verify{font-family:var(--mono);font-size:10px;padding:1px 5px;background:#fffbea;color:var(--yellow);border-radius:2px;margin-left:4px}
+
+/* ─── STATUS BADGES ─── */
+.badge{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.b-dot{width:4px;height:4px;border-radius:50%}
+.badge.green{background:var(--green-bg);color:var(--green)}.badge.green .b-dot{background:var(--green)}
+.badge.yellow{background:var(--yellow-bg);color:var(--yellow)}.badge.yellow .b-dot{background:var(--yellow)}
+.badge.red{background:var(--red-bg);color:var(--red)}.badge.red .b-dot{background:var(--red)}
+.badge.blue{background:var(--blue-bg);color:var(--blue)}.badge.blue .b-dot{background:var(--blue)}
+.badge.gray{background:var(--gray-bg);color:var(--gray)}.badge.gray .b-dot{background:var(--gray)}
+
+/* ─── TMO FILTER STATE ─── */
+body.tmo-filter .item:not(.has-tmo){display:none}
+body.tmo-filter .hl:not(.has-tmo){display:none}
+body.tmo-filter .section:not(:has(.item.has-tmo)){display:none}
+
+/* ─── THREAD TRACKER ─── */
+.thread-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0.75rem;margin-bottom:2.5rem}
+.thread{background:var(--surface);border:1px solid var(--border);border-left-width:3px;border-radius:2px;padding:1rem 1.1rem}
+.thread.escalating{border-left-color:var(--red)}
+.thread.active{border-left-color:var(--green)}
+.thread.resolved{border-left-color:var(--blue);opacity:0.72}
+.thread-status{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:0.35rem;display:flex;align-items:center;gap:5px}
+.t-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.thread.escalating .t-dot{background:var(--red)}
+.thread.active .t-dot{background:var(--green)}
+.thread.resolved .t-dot{background:var(--blue)}
+.thread-name{font-size:13.5px;font-weight:500;color:var(--ink);margin-bottom:0.375rem}
+.thread-body{font-size:13px;color:var(--ink-2);line-height:1.5}
+
+/* ─── TMO LENS (GRANOLA) ─── */
+.tmo-box{background:var(--ink);border-radius:2px;padding:1.5rem;margin-bottom:2rem}
+.tmo-lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(246,244,239,0.35);margin-bottom:1.1rem}
+.tmo-item{margin-bottom:1.1rem;padding-bottom:1.1rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.tmo-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.tmo-source{font-family:var(--mono);font-size:10px;color:var(--amber);margin-bottom:0.35rem}
+.tmo-text{font-size:14px;line-height:1.6;color:rgba(246,244,239,0.82)}
+.tmo-text strong{color:#f6f4ef;font-weight:500}
+
+/* ─── ACTION PROMPTS ─── */
+.action-box{background:var(--amber-light);border:1px solid var(--amber-border);border-radius:2px;padding:1.25rem 1.4rem;margin-bottom:2rem}
+.action-lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:0.75rem}
+.action-item{display:flex;gap:0.75rem;margin-bottom:0.625rem;align-items:flex-start}
+.action-item:last-child{margin-bottom:0}
+.action-n{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--amber);flex-shrink:0;margin-top:2px;min-width:20px}
+.action-text{font-size:14.5px;color:var(--ink-2);line-height:1.55}
+.action-text strong{font-weight:500;color:var(--ink)}
+
+/* ─── WATCHING NEXT ─── */
+.watch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0.75rem;margin-bottom:3rem}
+.watch-card{background:#fff;border:1px solid var(--border);border-radius:2px;padding:1rem 1.1rem}
+.watch-n{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:0.375rem}
+.watch-trigger{font-size:13.5px;font-weight:500;color:var(--ink);margin-bottom:0.5rem;line-height:1.4}
+.watch-if{font-size:13px;color:var(--ink-2);line-height:1.55}
+.watch-if em{font-style:normal;font-weight:500;color:var(--green)}
+.watch-if span{font-weight:500;color:var(--red)}
+
+/* ─── FOOTER ─── */
+.footer{border-top:1px solid var(--border);padding-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-meta{font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.7}
+.footer-nav{display:flex;gap:0.375rem}
+.btn-disabled{opacity:0.35;cursor:not-allowed;pointer-events:none}
+
+/* ─── MOBILE ─── */
+@media(max-width:600px){
+  body{padding:1.5rem 1rem 5rem}
+  .masthead{flex-direction:column;align-items:flex-start;gap:0.75rem}
+  .mast-meta{text-align:left}
+}
+
+/* ─── PRINT ─── */
+@media print{
+  .snav,.toolbar{display:none!important}
+  .section-body{display:block!important}
+  .item-detail{display:block!important}
+  .chevron,.item-chevron{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── STICKY NAV ── -->
+<nav class="snav" id="snav">
+  <span class="snav-id">Issue #1 · May 14, 2026</span>
+  <div class="snav-sep"></div>
+  <div class="snav-links">
+    <a class="snav-link" href="#headlines">Headlines</a>
+    <a class="snav-link" href="#s01">01 Lending</a>
+    <a class="snav-link" href="#s02">02 GTM</a>
+    <a class="snav-link" href="#s03">03 Media</a>
+    <a class="snav-link" href="#s04">04 Models</a>
+    <a class="snav-link" href="#s05">05 Compliance</a>
+    <a class="snav-link" href="#s06">06 Macro</a>
+    <a class="snav-link" href="#threads">Threads</a>
+    <a class="snav-link" href="#tmo-lens">TMO Lens</a>
+  </div>
+</nav>
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div>
+    <a href="/" class="mast-back">← TMO AI Frontier</a>
+    <div class="mast-title">AI Frontier Digest — Issue #1</div>
+  </div>
+  <div class="mast-meta">
+    May 14, 2026<br>
+    Prior issue: inaugural<br>
+    Ledger · #ai-firehose · #ai-tools · Granola
+  </div>
+</div>
+
+<!-- ── TOOLBAR ── -->
+<div class="toolbar">
+  <a href="/" class="btn">← Home</a>
+  <button class="btn" onclick="expandAll()">Expand all</button>
+  <button class="btn" onclick="collapseAll()">Collapse all</button>
+  <div class="btn-sep"></div>
+  <button class="btn" id="filter-btn" onclick="toggleFilter()">
+    <span class="btn-dot"></span>TMO touchpoints only
+  </button>
+  <div class="btn-sep"></div>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+  <button class="btn" onclick="copyLink()">Copy link</button>
+</div>
+
+<!-- ── SINCE LAST ISSUE ── -->
+<div class="since-box">
+  <div class="since-label">Since last issue</div>
+  Inaugural issue. The AI Frontier Digest is a delta-aware weekly synthesis grounded in the Ledger, #ai-firehose, #ai-tools, and Granola. Each issue opens by explicitly reconciling what the prior issue was watching. Threads are opened when a story needs multi-issue tracking; they carry forward until resolved. The TMO Lens section below is anchored to named meetings — not speculative.
+</div>
+
+<!-- ── HEADLINES ── -->
+<div class="headlines-box" id="headlines">
+  <div class="headlines-hdr">
+    <span class="headlines-lbl">Top headlines this week</span>
+    <span class="headlines-note">Click to jump and expand</span>
+  </div>
+
+  <a class="hl has-tmo" onclick="jumpTo('i-sora');return false" href="#i-sora">
+    <span class="hl-n">01</span>
+    <span class="hl-text">Sora app sunset — OpenAI exits consumer video, API ends September 24</span>
+    <span class="tag-amber">TMO</span>
+  </a>
+  <a class="hl has-tmo" onclick="jumpTo('i-loanpro');return false" href="#i-loanpro">
+    <span class="hl-n">02</span>
+    <span class="hl-text">LoanPro MCP narrative now embedded in AEO listicle content</span>
+    <span class="tag-amber">TMO</span>
+  </a>
+  <a class="hl has-tmo" onclick="jumpTo('i-breeze');return false" href="#i-breeze">
+    <span class="hl-n">03</span>
+    <span class="hl-text">HubSpot Breeze remote MCP server GA — Gong, G2, Linear, Amplitude accessible via prompts</span>
+    <span class="tag-amber">TMO</span>
+  </a>
+  <a class="hl has-tmo" onclick="jumpTo('i-anthropic');return false" href="#i-anthropic">
+    <span class="hl-n">04</span>
+    <span class="hl-text">Anthropic Opus rate limits +1,500% — SpaceX Colossus 1 compute deal closes vendor-stability question</span>
+    <span class="tag-amber">TMO</span>
+  </a>
+  <a class="hl" onclick="jumpTo('i-gptimage');return false" href="#i-gptimage">
+    <span class="hl-n">05</span>
+    <span class="hl-text">GPT Image 2 replaces DALL-E 3 and leads Image Arena on text rendering</span>
+  </a>
+  <a class="hl" onclick="jumpTo('i-mythos');return false" href="#i-mythos">
+    <span class="hl-n">06</span>
+    <span class="hl-text">Claude Mythos withheld on safety grounds — first major lab to do so publicly</span>
+  </a>
+  <a class="hl has-tmo" onclick="jumpTo('i-stateag');return false" href="#i-stateag">
+    <span class="hl-n">07</span>
+    <span class="hl-text">State AG enforcement is now the primary AI fair-lending vector, not CFPB</span>
+    <span class="tag-amber">TMO</span>
+  </a>
+</div>
+
+<!-- ── SECTIONS ── -->
+<div class="sec-label" id="sections">This week's developments — click any item to expand</div>
+
+<!-- 01 LENDING & FINTECH AI -->
+<div class="section open" id="s01">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">01</span>
+    <span class="sec-title">Lending &amp; Fintech AI</span>
+    <span class="sec-badge">4 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item has-tmo" id="i-loanpro">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge red"><span class="b-dot"></span>threat</span>
+        <span class="item-headline">LoanPro — MCP narrative now in AEO listicle content</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Moved from product launch to embedded AEO content in one cycle.</div>
+      <div class="item-detail">
+        "10 Best Loan Origination Software 2026" listicle updated ~May 7, leading with MCP-as-differentiator. This isn't a press release — it's now the implicit answer when AI assistants are asked which loan servicing platforms have MCP. The citation surface is hardening.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>TMOHub MCP server is the direct counter-artifact. The AEO framing window is narrow — the citation surface hardens each week without a counter-page.</div>
+      </div>
+    </div>
+
+    <div class="item has-tmo" id="i-nortridge">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge red"><span class="b-dot"></span>threat</span>
+        <span class="item-headline">Nortridge — "legacy Windows client" language now in citation-eligible content</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">LLMs describing TMO are pulling from Nortridge's framing.</div>
+      <div class="item-detail">
+        Nortridge's "11 Best Mortgage Lending Software 2026" uses explicit limitation language about TMO — "legacy Windows-based client applications" and "manual steps where additional automation could improve." That content is being scraped into how AI assistants describe The Mortgage Office.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>LendingWise and Nortridge comparison pages are the counter-move. Cadence beats perfection — a good draft ships faster than a perfect one.</div>
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge red"><span class="b-dot"></span>watch</span>
+        <span class="item-headline">Mortgage Automator — enters watch list as competitor</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">North American private-lender focus, G2 4.9★ across 112 reviews.</div>
+      <div class="item-detail">
+        Cloud-based end-to-end origination + servicing. Residential, commercial, construction. Live as active competitor-pages target as of Apr 27. No new AI-specific announcement this week — opening a tracking thread.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>G2 4.9★ across 112 reviews is the benchmark — any comparison page should directly address the rating gap.</div>
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge red"><span class="b-dot"></span>threat</span>
+        <span class="item-headline">Ocrolus — three major ships in seven months (Inspect, Encore, Automated Conditioning)</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Automated Conditioning GA'd April 1; Encore network-effect play is the longer-term threat.</div>
+      <div class="item-detail">
+        <strong>Inspect</strong> (Oct 2024, Encompass-integrated data verification). <strong>Encore</strong> (GA Jan 2026) — network-effect cash flow data-sharing platform, 175+ funders. <strong>Automated Conditioning</strong> (Mar 17, GA Apr 1) — AI-native condition management, 90 new mortgage lenders in past year at ~3/week. The Encore funder accumulation is the most dangerous thread — lock-in happens quietly.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Watch Encore funder count. Tracking trigger: 200 active funders would signal network-effect lock-in is accelerating.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 02 GTM TOOLING -->
+<div class="section" id="s02">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">02</span>
+    <span class="sec-title">GTM Tooling</span>
+    <span class="sec-badge">3 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item has-tmo" id="i-breeze">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">HubSpot Breeze — remote MCP GA + Audit Cards</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Gong, G2, Linear, Amplitude now accessible via plain-language Breeze prompts.</div>
+      <div class="item-detail">
+        Two ships early May. Remote MCP server is GA — Breeze Agents pull context from connected tools via prompts. Audit Cards (timestamped, property-level records of every AI action) are explicitly positioned for regulated industries. The GTM stack just got meaningfully more connected.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Productizes the Claude+Gong competitive-intel experiment Ben ran. Adjacent to TMO's compliance-defensible narrative for ProPilot.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">ChatGPT for Excel + Google Sheets — agentic spreadsheet integration GA globally</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Free/Go tier limited; Plus/Pro on Codex agentic limits. May 6.</div>
+      <div class="item-detail">
+        Part of the broader "AI in every surface" shift — work tools absorbing AI rather than the other way around. Worth a test pass for PMM workflow ops: list cleanup, scenario modeling, segmentation.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">Cursor — security agents ship, audit their own builds</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">May 5. Code-scanning agents positioned for compliance-sensitive dev environments.</div>
+      <div class="item-detail">
+        "AI that audits AI" framing is now appearing across multiple tool categories — worth tracking as a broader pattern. The positioning maps to compliance-defensible narratives for any AI-powered product.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 03 MEDIA GENERATION -->
+<div class="section" id="s03">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">03</span>
+    <span class="sec-title">Media Generation</span>
+    <span class="sec-badge">6 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item has-tmo" id="i-sora">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge gray"><span class="b-dot"></span>deprecated</span>
+        <span class="item-headline">Sora — app gone April 26, API sunset September 24</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Biggest media-generation category shift in six months. Migrate workflows now.</div>
+      <div class="item-detail">
+        OpenAI cited compute cost (~$1M/day), copyright friction, pivot to enterprise core. Disney $1B partnership ending. <strong>Do not anchor production workflows on Sora.</strong> Veo 3.1 via Vertex AI is the enterprise-contract migration path; SynthID watermarking available.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Audit any production video workflows. Veo 3.1 Vertex AI has enterprise contracts — direct replacement path for any Sora-dependent TMO marketing work.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>leader</span>
+        <span class="item-headline">Veo 3.1 Lite — cost-optimized Google video, 4K native audio, Sora migration default</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">May 11. Available via Gemini API, Vertex AI, YouTube. Enterprise contracts on Vertex.</div>
+      <div class="item-detail">
+        Free tier: 10 clips/mo (Apr 2). Veo 3.1 Lite cost-optimized. Technically strongest video model on the market post-Sora retreat. Single-pass 4K + synced audio. SynthID watermarking for brand protection.
+      </div>
+    </div>
+
+    <div class="item" id="i-gptimage">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>leader</span>
+        <span class="item-headline">GPT Image 2 — replaces DALL-E 3, leads Image Arena on text rendering</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">May 12. Best-in-class text rendering, infographics, multi-panel layouts.</div>
+      <div class="item-detail">
+        New architecture. DALL-E 3 and Image 1.5 both sunset. ChatGPT + API access. Commercial use allowed; no IP indemnification. Current default for text-heavy marketing imagery — listicles, comparison graphics, feature callouts.
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">Adobe Firefly — only major image platform with IP indemnification</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Apr 15: Firefly AI Assistant, Brand Intelligence, 30+ partner models including GPT Image 2 and Veo 3.1.</div>
+      <div class="item-detail">
+        SOC 2 + enterprise compliance stack. The only platform combining IP indemnification with agentic creative orchestration. Now hosts Flux.2, GPT Image 2, Veo 3.1 as partner models — one licensed platform for the full toolchain.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Default pick for CDFI-facing materials and bank-partner content where cleared provenance matters.</div>
+      </div>
+    </div>
+
+    <div class="item has-tmo">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>enterprise pick</span>
+        <span class="item-headline">Synthesia 3.0 — only avatar platform with full compliance stack</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">SOC 2 Type II + ISO 27001 + ISO 42001 + GDPR with EU residency. No competitor matches this.</div>
+      <div class="item-detail">
+        $200M Series E (Jan 2026) led by Google Ventures. 90% of Fortune 100. 230+ avatars, 140+ languages. SAML/OIDC SSO. Compliance stack is now a genuine differentiation point in the avatar video category.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>For regulated-buyer demos — CDFIs, banks, government agencies — the compliance certification stack matches the buyer profile.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">ElevenLabs — now a full platform: voice, music (ElevenMusic), agents</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">$500M Series C at $11B valuation (Feb 2026). ElevenMusic launched Apr 2026 — only commercially-safe licensed AI music.</div>
+      <div class="item-detail">
+        Merlin + Kobalt label deals make ElevenMusic the only legally clean AI music source for B2B commercial use. Also: video-to-music, Scribe v2, 10K+ voices via IBM. SOC 2 Type II + GDPR. The single platform for narration, voiceover, multilingual dubbing, and music.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 04 FRONTIER MODELS & AGENTS -->
+<div class="section" id="s04">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">04</span>
+    <span class="sec-title">Frontier Models &amp; Agents</span>
+    <span class="sec-badge">3 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item has-tmo" id="i-anthropic">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">Anthropic — Opus rate limits +1,500%, Claude Code doubled, SpaceX Colossus 1 compute deal</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">May 6. Vendor-stability risk substantially de-escalated across all Anthropic-dependent build plans.</div>
+      <div class="item-detail">
+        Tier 1 input rate limits ~1,500% increase, output ~900%. Claude Code 5-hour limits doubled. SpaceX Colossus 1 deal: 300MW, 220K+ NVIDIA GPUs. This closes the capacity and vendor-stability conversation for the near term.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Onyx procurement: the question is now pricing and model-version pinning, not capacity or availability risk.</div>
+      </div>
+    </div>
+
+    <div class="item" id="i-mythos">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge yellow"><span class="b-dot"></span>watch</span>
+        <span class="item-headline">Claude Mythos Preview — withheld on safety grounds, SWE-bench 93.9%</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">First major lab to publicly withhold a model for safety reasons. Cyber-safe variant via Project Glasswing.</div>
+      <div class="item-detail">
+        Announced April 7, trending in NYT May 12. GPQA Diamond 94.6%. Rumored Trump-admin EO on pre-deployment AI vetting may set industry precedent. Anthropic's enterprise credibility visibly increased by the decision to withhold.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge yellow"><span class="b-dot"></span>watch</span>
+        <span class="item-headline">OpenAI model cadence — five versions in Q2 2026, version-pinning is now a liability</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">GPT-5.1 → 5.2 → 5.4 mini → 5.5 within weeks. Any named model in docs will be stale before end of quarter.</div>
+      <div class="item-detail">
+        GPT-5.5 (Apr 26): 1M context, $5/$30 per M tokens. OpenAI retiring models at high pace. Any documentation, customer-facing materials, or integration notes naming a specific OpenAI model version will be stale within months. <span class="verify">⚠ verify GPT-5.6 timing</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 05 COMPLIANCE & REGULATORY AI -->
+<div class="section" id="s05">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">05</span>
+    <span class="sec-title">Compliance &amp; Regulatory AI</span>
+    <span class="sec-badge">3 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item has-tmo" id="i-stateag">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge red"><span class="b-dot"></span>threat</span>
+        <span class="item-headline">State AG enforcement — Earnest settlement makes AGs the primary AI fair-lending vector</span>
+        <span class="tag-amber">TMO</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Massachusetts AG settled with Earnest over discriminatory AI underwriting outcomes. CFPB has stepped back.</div>
+      <div class="item-detail">
+        State AGs are now the primary enforcement vector for AI fair-lending claims — filling the vacuum left by CFPB deprioritization. The pattern is accelerating, not slowing.
+        <div class="tmo-note"><span class="tmo-note-lbl">TMO</span>Compliance-defensible positioning for ProPilot and Pulse has renewed urgency. Adjacent to the counter-positioning narrative for CDFI and government agency buyers.</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>resolved</span>
+        <span class="item-headline">California DFPI — OppFi ruling rejects "true lender" theory (Feb 24)</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">LA Superior Court granted summary judgment to OppFi. Significant for bank-fintech partnership structures.</div>
+      <div class="item-detail">
+        The "valid-when-made" doctrine survives this round. DFPI's CRA registration RFI (comments closed Feb 26) is the active rulemaking to watch. California remains the primary state-level enforcement vector for TMO's regulated buyers.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge blue"><span class="b-dot"></span>archived</span>
+        <span class="item-headline">CFPB materially weakened — federal enforcement risk lower, state risk elevated <span class="verify">⚠ verify Q1-Q2 actions</span></span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Chopra fired Feb 2025. ECOA/FCRA/UDAAP still apply with private right of action intact.</div>
+      <div class="item-detail">
+        Lower federal enforcement risk than 2023–24. CFPB enforcement hiatus makes state AG risk relatively more significant — not less compliance pressure overall, just a different vector.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 06 MACRO & MARKET -->
+<div class="section" id="s06">
+  <div class="section-hdr" onclick="toggleSection(this)">
+    <span class="sec-num">06</span>
+    <span class="sec-title">Macro &amp; Market</span>
+    <span class="sec-badge">2 items</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge green"><span class="b-dot"></span>active</span>
+        <span class="item-headline">Browser-as-agent shift accelerating — ChatGPT Sheets, Cursor agents, Comet, Mariner</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Work surfaces are becoming ambient AI layers. The "separate AI tool you switch to" model is ending.</div>
+      <div class="item-detail">
+        The category-definition shift is real-time and accelerating. How AI is described in product positioning is changing from "do we have AI features" to "is AI embedded in the workflow." This distinction will matter in messaging within 2–3 quarters.
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-row" onclick="toggleItem(this)">
+        <span class="badge yellow"><span class="b-dot"></span>watch</span>
+        <span class="item-headline">DeepSeek price escalation commoditizing the mid-capability tier</span>
+        <span class="item-chevron">▶</span>
+      </div>
+      <div class="item-preview">Aggressive late-April cuts. Watch for downstream pricing pressure on Anthropic and OpenAI API tiers.</div>
+      <div class="item-detail">
+        Frontier-adjacent capability approaching commodity pricing at the mid tier. Pressures every model positioned above it on price. The long-run effect on API pricing is not yet visible but directionally clear.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── THREAD TRACKER ── -->
+<div class="sec-label" id="threads" style="margin-top:2.5rem">Thread tracker</div>
+<div class="thread-grid">
+  <div class="thread escalating">
+    <div class="thread-status"><span class="t-dot"></span>Issue #1 · escalating</div>
+    <div class="thread-name">LoanPro MCP narrative</div>
+    <div class="thread-body">From product launch to embedded AEO listicle content in one cycle. Counter-positioning urgency increased — this thread is open until TMO has a public counter-artifact.</div>
+  </div>
+  <div class="thread active">
+    <div class="thread-status"><span class="t-dot"></span>Issue #1 · active</div>
+    <div class="thread-name">HTML-vs-Markdown for AI outputs</div>
+    <div class="thread-body">HTML outperforms Markdown on 17/20 tasks (60–70% more tokens). No new movement. Relevant to content structuring for LLM-facing docs and RAG pipelines.</div>
+  </div>
+  <div class="thread resolved">
+    <div class="thread-status"><span class="t-dot"></span>Issue #1 · resolved</div>
+    <div class="thread-name">Claude Code quality regression</div>
+    <div class="thread-body">Resolved operationally by Anthropic's May 6 capacity announcement. Onyx procurement risk de-escalated. Closing this thread.</div>
+  </div>
+</div>
+
+<!-- ── TMO LENS (GRANOLA) ── -->
+<div class="sec-label" id="tmo-lens">TMO Lens — meeting-anchored</div>
+<div class="tmo-box">
+  <div class="tmo-lbl">Granola · Past 14 days · Strategy and planning meetings only</div>
+
+  <div class="tmo-item">
+    <div class="tmo-source">May 5 · Monthly AI Council</div>
+    <div class="tmo-text">Per the May 5 AI Council discussion of the internal AI roadmap, the LoanPro MCP launch suggests TMO's TMOHub MCP server is the immediate counter-positioning artifact — and that the window is narrowing. The narrative gap between internal roadmap progress and public positioning is the current PMM risk.</div>
+  </div>
+  <div class="tmo-item">
+    <div class="tmo-source">May 5 · Monthly AI Council — Onyx block</div>
+    <div class="tmo-text">Per the May 5 discussion of the Onyx procurement block on Claude API access, Anthropic's May 6 capacity announcement (1,500% rate limit increase, Colossus 1 compute) suggests the vendor-stability framing is now resolved. The procurement conversation should shift to pricing and model-version pinning.</div>
+  </div>
+  <div class="tmo-item">
+    <div class="tmo-source">May 4 · Profound sync</div>
+    <div class="tmo-text">Per the May 4 Profound sync review of AEO session data (218 AI-sourced sessions over 180 days, 4.4x conversion vs. other sources), the Nortridge and LoanPro listicle moves suggest comparison-page content is now a citation-surface priority, not just an SEO priority. Listicle framing scrapes more reliably into LLM citations than ranking-optimized content.</div>
+  </div>
+  <div class="tmo-item">
+    <div class="tmo-source">Apr 30 · TMO + Vital Weekly</div>
+    <div class="tmo-text">Per the Apr 30 Vital sync on comparison-guide content strategy, HubSpot Breeze MCP GA (Gong, G2, Amplitude) suggests the Claude+Gong competitive-intel experiment Ben ran can now be productized inside the existing stack — relevant to the content velocity and competitive-monitoring workflow discussed in that meeting.</div>
+  </div>
+</div>
+
+<!-- ── ACTION PROMPTS ── -->
+<div class="sec-label">Action prompts — before Issue #2</div>
+<div class="action-box">
+  <div class="action-lbl">Prioritized — marketing engineer + PMM lens</div>
+  <div class="action-item">
+    <div class="action-n">01</div>
+    <div class="action-text"><strong>Test HubSpot Breeze MCP against the Claude+Gong competitive-intel workflow.</strong> Remote MCP is now GA. Run the experiment inside Breeze before building a custom pipeline. The Audit Card trail is the compliance story.</div>
+  </div>
+  <div class="action-item">
+    <div class="action-n">02</div>
+    <div class="action-text"><strong>Ship the LendingWise and Nortridge comparison pages.</strong> Every week of delay is a week of Nortridge's "legacy Windows client" framing shaping how LLMs describe TMO. A good draft beats a perfect draft.</div>
+  </div>
+  <div class="action-item">
+    <div class="action-n">03</div>
+    <div class="action-text"><strong>Audit any Sora-dependent video workflow.</strong> API sunset is September 24. Veo 3.1 via Vertex AI has enterprise contracts available — this migration has a short runway.</div>
+  </div>
+</div>
+
+<!-- ── WATCHING NEXT ── -->
+<div class="sec-label">Watching next — Issue #2 calls</div>
+<div class="watch-grid">
+  <div class="watch-card">
+    <div class="watch-n">Watch #1</div>
+    <div class="watch-trigger">Mortgage Automator or LendingWise AI announcement</div>
+    <div class="watch-if">If <em>either ships an AI-specific announcement before Issue #2</em>, the comparison content brief rewrites and the schedule accelerates. <span>If neither ships</span>, competitor pages proceed on current Vital cadence.</div>
+  </div>
+  <div class="watch-card">
+    <div class="watch-n">Watch #2</div>
+    <div class="watch-trigger">Ocrolus Encore funder count</div>
+    <div class="watch-if">If <em>Encore crosses 200 active funders by Issue #2</em>, network-effect lock-in is accelerating and the threat tier escalates. <span>If still below 200</span>, the thread remains active but not escalated.</div>
+  </div>
+  <div class="watch-card">
+    <div class="watch-n">Watch #3</div>
+    <div class="watch-trigger">Anthropic pre-deployment eval framework (Mythos / Glasswing)</div>
+    <div class="watch-if">If <em>Anthropic publishes a formal eval framework by Issue #2</em>, it becomes a vendor-level compliance citation for TMO's positioning. <span>If not published</span>, Mythos remains narrative-only.</div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <div class="footer-meta">AI Frontier Digest · Issue #1 · May 14, 2026<br>The Mortgage Office — Internal use only</div>
+  <div class="footer-nav">
+    <a href="/" class="btn">← Home</a>
+    <button class="btn btn-disabled">← Issue #0</button>
+    <button class="btn btn-disabled">Issue #2 →</button>
+  </div>
+</div>
+
+<script>
+// Section toggle
+function toggleSection(hdr){hdr.parentElement.classList.toggle('open')}
+
+// Item toggle
+function toggleItem(row){row.parentElement.classList.toggle('open')}
+
+// Expand / collapse all
+function expandAll(){
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('open'));
+  document.querySelectorAll('.item').forEach(i=>i.classList.add('open'));
+}
+function collapseAll(){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('open'));
+  document.querySelectorAll('.item').forEach(i=>i.classList.remove('open'));
+}
+
+// Jump from headline → item: open section, open item, scroll
+function jumpTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.closest('.section')?.classList.add('open');
+  el.classList.add('open');
+  setTimeout(()=>{
+    const top=el.getBoundingClientRect().top+window.scrollY-56;
+    window.scrollTo({top,behavior:'smooth'});
+  },40);
+}
+
+// TMO filter toggle
+const filterBtn=document.getElementById('filter-btn');
+function toggleFilter(){
+  document.body.classList.toggle('tmo-filter');
+  filterBtn.classList.toggle('on');
+}
+
+// Sticky nav
+const snav=document.getElementById('snav');
+window.addEventListener('scroll',()=>snav.classList.toggle('show',window.scrollY>180),{passive:true});
+
+// Copy link
+function copyLink(){
+  navigator.clipboard.writeText(location.href).then(()=>{
+    const prev=event.target.textContent;
+    event.target.textContent='Copied ✓';
+    setTimeout(()=>event.target.textContent=prev,1800);
+  });
+}
+
+// Smooth scroll for sticky nav section links
+document.querySelectorAll('.snav-link[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)window.scrollTo({top:t.getBoundingClientRect().top+scrollY-54,behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMO AI Frontier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0e0c; --ink-2:#3a3a36; --ink-3:#76746e; --ink-4:#b8b5ac;
+  --paper:#f6f4ef; --surface:#eeece6; --surface-2:#e4e2db; --border:#d8d5cd;
+  --amber:#b87d1a; --amber-light:#fdf3e0; --amber-border:#e8c97a;
+  --mono:'IBM Plex Mono',monospace;
+  --serif:'Instrument Serif',serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+nav{border-bottom:1px solid var(--border);padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);text-decoration:none}
+.nav-logo span{color:var(--ink)}
+.nav-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink-4);text-transform:uppercase}
+
+main{flex:1;max-width:1060px;margin:0 auto;width:100%;padding:5rem 2.5rem 6rem}
+
+.hero{margin-bottom:5rem;max-width:600px}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.5rem}
+.hero-title{font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.4rem);line-height:1.06;color:var(--ink);margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--ink-3)}
+.hero-body{font-size:17px;color:var(--ink-2);line-height:1.65;font-weight:300}
+
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.5rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sec-label a{font-family:var(--mono);font-size:10px;color:var(--amber);text-decoration:none;letter-spacing:0.04em;text-transform:none}
+.sec-label a:hover{text-decoration:underline}
+
+.pubs{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:5rem}
+.pub{background:var(--paper);padding:2rem 1.875rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:0.875rem;transition:background 0.15s;position:relative;min-height:230px}
+.pub:hover{background:#fff}
+.pub:hover .pub-arrow{opacity:1;transform:translate(0,0)}
+.pub-status{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:0.45rem}
+.pub-dot{width:5px;height:5px;border-radius:50%;background:var(--amber)}
+.pub-title{font-family:var(--serif);font-size:1.5rem;line-height:1.15;color:var(--ink)}
+.pub-title em{font-style:italic}
+.pub-desc{font-size:14px;color:var(--ink-3);line-height:1.6;font-weight:300;flex:1}
+.pub-meta{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:0.5rem}
+.pub-arrow{font-family:var(--mono);font-size:13px;color:var(--amber);opacity:0;transform:translate(-4px,4px);transition:all 0.2s;position:absolute;bottom:2rem;right:1.875rem}
+.pub.paused{background:var(--surface);cursor:default}
+.pub.paused:hover{background:var(--surface)}
+.pub.paused .pub-status,.pub.paused .pub-dot,.pub.paused .pub-arrow{color:var(--ink-4);background:var(--ink-4)}
+.pub.paused .pub-title{color:var(--ink-3)}
+.pub.paused .pub-desc{color:var(--ink-4)}
+
+.preview{border:1px solid var(--border);background:#fff;margin-bottom:4rem}
+.preview-hdr{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.preview-title{font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--ink)}
+.preview-date{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.hl{padding:0.875rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:baseline;gap:0.875rem;text-decoration:none;color:inherit;transition:background 0.12s;cursor:pointer}
+.hl:first-of-type{border-top:none}
+.hl:hover{background:var(--surface)}
+.hl-n{font-family:var(--mono);font-size:11px;color:var(--ink-4);min-width:22px;flex-shrink:0}
+.hl-text{flex:1;font-size:15.5px;color:var(--ink-2);line-height:1.5}
+.tag-amber{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:0.05em;padding:2px 6px;background:var(--amber-light);color:var(--amber);border-radius:2px;flex-shrink:0;align-self:center}
+.preview-ftr{padding:0.875rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.preview-ftr p{font-size:13px;color:var(--ink-3)}
+.btn{font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;padding:7px 14px;border-radius:2px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);text-decoration:none;text-transform:uppercase;transition:background 0.14s;display:inline-block}
+.btn:hover{background:var(--ink-2)}
+
+footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-left{font-family:var(--mono);font-size:10px;color:var(--ink-4);line-height:1.8}
+.footer-right{font-family:var(--mono);font-size:10px;color:var(--ink-4)}
+
+@media(max-width:600px){
+  nav,main,footer{padding-left:1.25rem;padding-right:1.25rem}
+  main{padding-top:3rem}
+  .hero{margin-bottom:3rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/"><span>TMO</span> AI Frontier</a>
+  <span class="nav-tag">Internal · Not for distribution</span>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-eyebrow">The Mortgage Office — AI Intelligence</div>
+    <h1 class="hero-title">Three publications.<br><em>One internal source of signal.</em></h1>
+    <p class="hero-body">AI industry tracking, competitor intelligence, and product release notes — written for someone who already works in the space. No preambles. No filler.</p>
+  </div>
+
+  <div class="sec-label">Publications</div>
+  <div class="pubs">
+
+    <a class="pub" href="/ai-frontier-digest-issue-1.html">
+      <div class="pub-status"><span class="pub-dot"></span>Weekly</div>
+      <div class="pub-title">AI Frontier <em>Digest</em></div>
+      <div class="pub-desc">Delta-aware weekly synthesis across six categories — lending tech, GTM tooling, media generation, frontier models, compliance, and macro. Grounded in the Ledger, #ai-firehose, #ai-tools, and Granola.</div>
+      <div class="pub-meta">Issue #1 · May 14, 2026</div>
+      <span class="pub-arrow">↗</span>
+    </a>
+
+    <a class="pub" href="/competitor-landscape.html">
+      <div class="pub-status"><span class="pub-dot"></span>Events-driven</div>
+      <div class="pub-title">Competitor <em>Landscape</em></div>
+      <div class="pub-desc">Tracked intelligence on LoanPro, Encompass, Mortgage Cadence, Nortridge, Mortgage Automator, and emerging entrants. Published when material moves happen — not on a fixed cadence.</div>
+      <div class="pub-meta">Updated as events warrant</div>
+      <span class="pub-arrow">↗</span>
+    </a>
+
+    <div class="pub paused">
+      <div class="pub-status"><span class="pub-dot"></span>Paused</div>
+      <div class="pub-title">TMO Product <em>Updates</em></div>
+      <div class="pub-desc">Internal release notes for ProPilot, Pulse, and TMO platform changes. Format and source pipeline being finalized.</div>
+      <div class="pub-meta">Not yet published</div>
+    </div>
+
+  </div>
+
+  <div class="sec-label">
+    <span>Latest — AI Frontier Digest Issue #1</span>
+    <a href="/ai-frontier-digest-issue-1.html">Read full issue →</a>
+  </div>
+  <div class="preview">
+    <div class="preview-hdr">
+      <div class="preview-title">Top headlines this week</div>
+      <div class="preview-date">May 14, 2026</div>
+    </div>
+
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-sora">
+      <span class="hl-n">01</span>
+      <span class="hl-text">Sora app sunset — OpenAI exits consumer video, API ends September 24</span>
+      <span class="tag-amber">TMO</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-loanpro">
+      <span class="hl-n">02</span>
+      <span class="hl-text">LoanPro MCP narrative now embedded in AEO listicle content</span>
+      <span class="tag-amber">TMO</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-breeze">
+      <span class="hl-n">03</span>
+      <span class="hl-text">HubSpot Breeze remote MCP server GA — Gong, G2, Linear, Amplitude via prompts</span>
+      <span class="tag-amber">TMO</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-anthropic">
+      <span class="hl-n">04</span>
+      <span class="hl-text">Anthropic Opus rate limits +1,500% — SpaceX Colossus 1 closes vendor-stability question</span>
+      <span class="tag-amber">TMO</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-gptimage">
+      <span class="hl-n">05</span>
+      <span class="hl-text">GPT Image 2 replaces DALL-E 3, leads Image Arena on text rendering</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-mythos">
+      <span class="hl-n">06</span>
+      <span class="hl-text">Claude Mythos withheld on safety grounds — first major lab to do so publicly</span>
+    </a>
+    <a class="hl" href="/ai-frontier-digest-issue-1.html#i-stateag">
+      <span class="hl-n">07</span>
+      <span class="hl-text">State AG enforcement is now the primary AI fair-lending vector, not CFPB</span>
+      <span class="tag-amber">TMO</span>
+    </a>
+
+    <div class="preview-ftr">
+      <p>Sources: AI Running Ledger · #ai-firehose · #ai-tools · Granola</p>
+      <a class="btn" href="/ai-frontier-digest-issue-1.html">Read Issue #1</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-left">
+    TMO AI Frontier · tmo-ai-frontier.netlify.app<br>
+    The Mortgage Office / Applied Business Software · Internal use only
+  </div>
+  <div class="footer-right">Built with Claude</div>
+</footer>
+
+</body>
+</html>
